@@ -7,7 +7,7 @@ exports["default"] = Link;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _Commons = require("../../../components/Commons.js");
+var _ABlank = _interopRequireDefault(require("./ABlank.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -110,7 +110,7 @@ function Link(props) {
     style: style.forground,
     onClick: click,
     onDoubleClick: dblclick
-  }, /*#__PURE__*/_react["default"].createElement(_Commons.LinkBlank, {
+  }, /*#__PURE__*/_react["default"].createElement(_ABlank["default"], {
     href: data.href,
     style: style.link
   }, makeContents(data.label.contents))));

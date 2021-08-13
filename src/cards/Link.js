@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {LinkBlank} from '../../../components/Commons.js';
+import ABlank from './ABlank.js';
 
 const style = {
     forground: {
@@ -96,9 +96,9 @@ export default function Link (props) {
           <div style={style.forground}
                onClick={click}
                onDoubleClick={dblclick}>
-            <LinkBlank href={data.href} style={style.link}>
+            <ABlank href={data.href} style={style.link}>
               {makeContents(data.label.contents)}
-            </LinkBlank>
+            </ABlank>
           </div>
 
         </div>
