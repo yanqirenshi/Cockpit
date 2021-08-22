@@ -21,13 +21,15 @@ const style = {
 export default function Cockpit (props) {
     const core = props.core;
 
+    const loading = props.loading;
     const filter = props.filter;
     const callbacks = props.callbacks;
 
     return (
         <div style={style.root}>
           <div>
-            <Controller filter={filter}
+            <Controller loading={loading}
+                        filter={filter}
                         callbacks={callbacks}/>
           </div>
 
