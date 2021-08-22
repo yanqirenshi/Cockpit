@@ -27,6 +27,7 @@ const style = {
 };
 
 export default function Controller (props) {
+    const loading = props.loading;
     const callbacks_filter = props.callbacks.filter;
 
     const change = (e) => {
@@ -45,7 +46,8 @@ export default function Controller (props) {
           <div style={style.container}>
             <div style={style.icon}>
               <button className="button is-small"
-                      onClick={refresh}>
+                      onClick={refresh}
+                      disabled={loading}>
                 <FontAwesomeIcon style={{}} icon={faSyncAlt} />
               </button>
             </div>
