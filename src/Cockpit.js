@@ -18,6 +18,18 @@ const style = {
     }
 };
 
+function merge (props, key, style) {
+    const props_style = props.style;
+    if (!props_style)
+        return null;
+
+    const target = props_style[key];
+    if (!target)
+        return null;
+
+    return {...style, ...target};
+}
+
 export default function Cockpit (props) {
     const core = props.core;
 
@@ -33,7 +45,7 @@ export default function Cockpit (props) {
                         callbacks={callbacks}/>
           </div>
 
-          <div style={style.pool}>
+          <div style={merge(props, "pool", style.pool)}>
             <Cards core={core}>
               {props.children}
             </Cards>

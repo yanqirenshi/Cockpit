@@ -37,6 +37,7 @@ var style = {
 };
 
 function Controller(props) {
+  var loading = props.loading;
   var callbacks_filter = props.callbacks.filter;
 
   var change = function change(e) {
@@ -67,7 +68,8 @@ function Controller(props) {
     style: style.icon
   }, /*#__PURE__*/_react["default"].createElement("button", {
     className: "button is-small",
-    onClick: refresh
+    onClick: refresh,
+    disabled: loading
   }, /*#__PURE__*/_react["default"].createElement(_reactFontawesome.FontAwesomeIcon, {
     style: {},
     icon: _freeSolidSvgIcons.faSyncAlt
