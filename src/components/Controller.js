@@ -28,15 +28,18 @@ const style = {
 
 export default function Controller (props) {
     const loading = props.loading;
-    const callbacks_filter = props.callbacks.filter;
+    const filter = props.filter;
+    const callbacks = props.callbacks;
+
+    const callbacks_filter = callbacks.filter;
 
     const change = (e) => {
         const code = e.target.getAttribute('code');
-        const filter_item = props.filter.find(d=>d.code===code);
+        const filter_item = filter.find(d=>d.code===code);
         callbacks_filter.change(filter_item);
     };
 
-    const refresh = () => props.callbacks.refresh();
+    const refresh = () => callbacks.refresh();
     const clearAll = () => callbacks_filter.clearAll();
     const checkAll = () => callbacks_filter.checkAll();
 
@@ -56,7 +59,7 @@ export default function Controller (props) {
               <FontAwesomeIcon style={{}} icon={faFilter} />
             </div>
 
-            {props.filter.filter(d=>d.code).map((d,i) => {
+            {filter.filter(d=>d.code).map((d,i) => {
                 return (
                     <label key={d.code} className="checkbox" style={style.item}>
                       <input type="checkbox"

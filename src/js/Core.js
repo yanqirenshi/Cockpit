@@ -213,8 +213,8 @@ export default class Core {
         };
     }
     updateIssueCard (card, d, today)  {
-        const card_next = card._core.issue.date_next_action;
-        const data_next = d.issue.date_next_action;
+        const card_next = card._core.issue.core.nextActionDate();
+        const data_next = d.issue.core.nextActionDate();
 
         if (card_next!==data_next)
             card.updated_at = this.getUpdatedAt(d, today);
