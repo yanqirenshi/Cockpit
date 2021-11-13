@@ -284,7 +284,7 @@ var Core = /*#__PURE__*/function () {
   }, {
     key: "getUpdatedAt",
     value: function getUpdatedAt(d, today) {
-      var data_next = d.issue.date_next_action;
+      var data_next = d.issue.core.nextActionDate();
       if (!data_next) return (0, _moment["default"])();
       var duedate = (0, _moment["default"])(data_next);
       if (!duedate.isValid()) return (0, _moment["default"])();

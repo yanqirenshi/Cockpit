@@ -171,7 +171,7 @@ export default class Core {
     /*****   Issues and Projects                                            *****/
     /***** **************************************************************** *****/
     getUpdatedAt (d, today) {
-        const data_next = d.issue.date_next_action;
+        const data_next = d.issue.core.nextActionDate();
         if (!data_next)
             return moment();
 
