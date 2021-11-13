@@ -283,9 +283,9 @@ var Core = /*#__PURE__*/function () {
 
   }, {
     key: "getUpdatedAt",
-    value: function getUpdatedAt(d, today) {
-      var data_next = d.issue.core.nextActionDate();
-      if (!data_next) return (0, _moment["default"])();
+    value: function getUpdatedAt(seed, today) {
+      var data_next = seed.updated_at;
+      if (!data_next) return null;
       var duedate = (0, _moment["default"])(data_next);
       if (!duedate.isValid()) return (0, _moment["default"])();
       if (duedate.isAfter(today)) return (0, _moment["default"])();
@@ -335,15 +335,18 @@ var Core = /*#__PURE__*/function () {
     }
   }, {
     key: "updateIssueCard",
-    value: function updateIssueCard(card, d, today) {
-      var card_next = card._core.issue.core.nextActionDate();
+    value: function updateIssueCard(card, seed, today) {
+      var x = function x(_x) {
+        return !_x ? _x : _x.format('YYYY-MM-DD');
+      };
 
-      var data_next = d.issue.core.nextActionDate();
-      if (card_next !== data_next) card.updated_at = this.getUpdatedAt(d, today); // TODO: どれが正解?
+      var card_next = x(card.updated_at);
+      var data_next = x(seed.updated_at);
+      if (card_next !== data_next) card.updated_at = this.getUpdatedAt(seed, today); // TODO: どれが正解?
 
-      card.core = d;
-      card.issue = d;
-      card._core = d;
+      card.core = seed;
+      card.issue = seed;
+      card._core = seed;
     }
   }, {
     key: "list2ht",
@@ -352,7 +355,8 @@ var Core = /*#__PURE__*/function () {
         ht[d.id] = d;
         return ht;
       }, {});
-    }
+    } // TODO: delete
+
   }, {
     key: "setIssueCards",
     value: function setIssueCards(issues) {

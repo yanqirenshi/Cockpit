@@ -170,10 +170,11 @@ export default class Core {
     /***** **************************************************************** *****/
     /*****   Issues and Projects                                            *****/
     /***** **************************************************************** *****/
-    getUpdatedAt (d, today) {
-        const data_next = d.issue.core.nextActionDate();
+    getUpdatedAt (seed, today) {
+        const data_next = seed.updated_at;
+
         if (!data_next)
-            return moment();
+            return null;
 
         const duedate = moment(data_next);
 
@@ -212,17 +213,19 @@ export default class Core {
             },
         };
     }
-    updateIssueCard (card, d, today)  {
-        const card_next = card._core.issue.core.nextActionDate();
-        const data_next = d.issue.core.nextActionDate();
+    updateIssueCard (card, seed, today)  {
+        const x = (x)=> !x ? x : x.format('YYYY-MM-DD');
+
+        const card_next = x(card.updated_at);
+        const data_next = x(seed.updated_at);
 
         if (card_next!==data_next)
-            card.updated_at = this.getUpdatedAt(d, today);
+            card.updated_at = this.getUpdatedAt(seed, today);
 
         // TODO: どれが正解?
-        card.core = d;
-        card.issue = d;
-        card._core = d;
+        card.core = seed;
+        card.issue = seed;
+        card._core = seed;
     };
     list2ht (list) {
         return list.reduce((ht, d) => {
@@ -230,6 +233,7 @@ export default class Core {
             return ht;
         }, {});
     }
+    // TODO: delete
     setIssueCards (issues) {
         if (issues.length===0) return;
 
