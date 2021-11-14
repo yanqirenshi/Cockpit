@@ -1,26 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from "react-router-dom";
+import Cockpit from './components/Cockpit.js';
 
-ReactDOM.render(
-    <React.StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>,
-  document.getElementById('root')
-);
+import Link       from './components/cards/Link.js';
+import Message    from './components/cards/Message.js';
+import SmallLarge from './components/cards/SmallLarge.js';
+import Plane      from './components/cards/Plane.js';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.unregister();
+import Core from './js/Core.js';
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export default Cockpit;
+export {
+    Core,
+    Link,
+    Message,
+    SmallLarge,
+    Plane,
+};
