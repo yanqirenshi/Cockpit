@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 
+import * as models from './models/index.js';
+
 export default class Core {
     constructor (options) {
         this._options = null;
@@ -13,6 +15,13 @@ export default class Core {
         this._cards2 = {};
 
         this.options(options);
+
+        this.models = {
+            link:    new models.CardLink(),
+            message: new models.CardMessage(),
+            plane:   new models.CardPlane(),
+            sl:      new models.CardSL(),
+        };
     }
     cards (v) {
         console.warn('Not suppoted yet. method=Core.cards');
@@ -67,20 +76,8 @@ export default class Core {
         }, []);
     }
     makeCardLink (d) {
-        return {
-            id: this._card_id_counter--,
-            _class: 'LINK',
-            _type: d.type || 'Others',
-            _core: d,
-            size: {
-                col: d.col || 1,
-                row: d.row || 1
-            },
-            label: { contents: d.label },
-            href: d.href,
-            wallpaper: { path: d.wallpaper },
-            updated_at: moment(),
-        };
+        const id = this._card_id_counter--;
+        return new models.CardLink().make(id, d);
     }
     makeCardLinks () {
         return this.cardLInks().map(d => this.makeCardLink(d));
@@ -88,38 +85,9 @@ export default class Core {
     /***** **************************************************************** *****/
     /*****   Small and Large                                                *****/
     /***** **************************************************************** *****/
-    updatedAtByData (d) {
-        if (d.updated_at===null)
-            return null;
-
-        if (d.updated_at)
-            return d.updated_at;
-
-        return moment();
-    }
     makeCardSL (d) {
-        return {
-            _class: 'SL',
-            _type: d.type || 'Others',
-            id: this._card_id_counter--,
-            _core: d,
-            open: false,
-            small: {
-                head: {
-                    title: { contents: d.s.title },
-                },
-                body: { contents : d.s.body },
-                size: { col: d.s.col },
-            },
-            large: {
-                head: {
-                    title: { contents: d.l.title },
-                },
-                body: { contents : d.l.body },
-                size: { col: d.l.col },
-            },
-            updated_at: this.updatedAtByData(d),
-        };
+        const id = this._card_id_counter--;
+        return new models.CardSL().make(id, d);
     }
     makeCardsSL () {
         const list = this._data.sl;
@@ -133,30 +101,9 @@ export default class Core {
     /***** **************************************************************** *****/
     /*****   message                                                        *****/
     /***** **************************************************************** *****/
-    makeMessageContents (v) {
-        if (Array.isArray(v))
-            return v.map((d,i) => <p key={i}>{d}</p>);
-
-        if ('string'===(typeof v))
-            return this.makeMessageContents(v.split('\n'));
-
-        return v;
-    }
     makeMessage (g) {
-        return {
-            id: this._card_id_counter--,
-            _class: 'MESSAGE',
-            _type: 'message',
-            _core: g,
-            size: { col: 2, row: 2 },
-            message: {
-                type: g.type==='e' ? 'ERROR' : 'NORMAL',
-                title: g.title,
-                contents: this.makeMessageContents(g.msg),
-                core: g,
-            },
-            updated_at: null,
-        };
+        const id = this._card_id_counter--;
+        return new models.CardMessage().make(id, g);
     }
     makeMessages (g) {
         return this._data.messages.map(d => this.makeMessage(d));
@@ -171,20 +118,35 @@ export default class Core {
     /*****   Issues and Projects                                            *****/
     /***** **************************************************************** *****/
     getUpdatedAt (d, today) {
-        const data_next = d.issue.date_next_action;
-        if (!data_next)
-            return moment();
+        const date = d.core.nextActionDate();
 
-        const duedate = moment(data_next);
+        // Next Action Date が設定されてない場合は now とする。
+        if (!date)
+            return null;
 
+        const duedate = moment(date);
+
+        // Next Action Date の値が日付でない場合は now とする。
         if (!duedate.isValid())
             return moment();
 
-        if (duedate.isAfter(today))
-            return moment();
-
-        return null;
+        return duedate;
     }
+    // getUpdatedAt (d, today) {
+    //     const data_next = d.issue.date_next_action;
+    //     if (!data_next)
+    //         return moment();
+
+    //     const duedate = moment(data_next);
+
+    //     if (!duedate.isValid())
+    //         return moment();
+
+    //     if (duedate.isAfter(today))
+    //         return moment();
+
+    //     return null;
+    // }
     makeIssueCard (d, today) {
         console.warn('Not suppoted yet. method=makeIssueCard');
 
@@ -215,7 +177,6 @@ export default class Core {
     updateIssueCard (card, d, today)  {
         const card_next = card._core.issue.core.nextActionDate();
         const data_next = d.issue.core.nextActionDate();
-
         if (card_next!==data_next)
             card.updated_at = this.getUpdatedAt(d, today);
 
@@ -304,14 +265,8 @@ export default class Core {
     /*****   Plane                                                          *****/
     /***** **************************************************************** *****/
     makePlane (d) {
-        return {
-            id: this._card_id_counter--,
-            _class: 'PLANE',
-            _type: d.type || 'other',
-            _core: d,
-            size: { col: d.col || 3 },
-            updated_at: null,
-        };
+        const id = this._card_id_counter--;
+        return new models.CardPlane().make(id, d);
     }
     /***** **************************************************************** *****/
     /*****   Make Cards                                                     *****/
@@ -341,11 +296,14 @@ export default class Core {
         }
 
         const sorter = (a,b) => {
+            if (a.updated_at.isSame(b.updated_at))
+                return a.id < b.id ? -1 : 1;
+
             return a.updated_at.isSameOrBefore(b.updated_at) ? -1 : 1;
         };
 
         return []
-            .concat(not_updated)
+            .concat(not_updated.sort((a,b)=> a.id < b.id ? -1 : 1))
             .concat(updated.sort(sorter));
     }
     /***** **************************************************************** *****/
