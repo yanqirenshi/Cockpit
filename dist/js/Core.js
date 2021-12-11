@@ -1,5 +1,7 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -8,6 +10,12 @@ exports["default"] = void 0;
 var _react = _interopRequireDefault(require("react"));
 
 var _moment = _interopRequireDefault(require("moment"));
+
+var models = _interopRequireWildcard(require("./models/index.js"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -50,6 +58,12 @@ var Core = /*#__PURE__*/function () {
     this._card_id_counter = -1;
     this._cards2 = {};
     this.options(options);
+    this.models = {
+      link: new models.CardLink(),
+      message: new models.CardMessage(),
+      plane: new models.CardPlane(),
+      sl: new models.CardSL()
+    };
   }
 
   _createClass(Core, [{
@@ -120,24 +134,8 @@ var Core = /*#__PURE__*/function () {
   }, {
     key: "makeCardLink",
     value: function makeCardLink(d) {
-      return {
-        id: this._card_id_counter--,
-        _class: 'LINK',
-        _type: d.type || 'Others',
-        _core: d,
-        size: {
-          col: d.col || 1,
-          row: d.row || 1
-        },
-        label: {
-          contents: d.label
-        },
-        href: d.href,
-        wallpaper: {
-          path: d.wallpaper
-        },
-        updated_at: (0, _moment["default"])()
-      };
+      var id = this._card_id_counter--;
+      return new models.CardLink().make(id, d);
     }
   }, {
     key: "makeCardLinks",
@@ -155,49 +153,10 @@ var Core = /*#__PURE__*/function () {
     /***** **************************************************************** *****/
 
   }, {
-    key: "updatedAtByData",
-    value: function updatedAtByData(d) {
-      if (d.updated_at === null) return null;
-      if (d.updated_at) return d.updated_at;
-      return (0, _moment["default"])();
-    }
-  }, {
     key: "makeCardSL",
     value: function makeCardSL(d) {
-      return {
-        _class: 'SL',
-        _type: d.type || 'Others',
-        id: this._card_id_counter--,
-        _core: d,
-        open: false,
-        small: {
-          head: {
-            title: {
-              contents: d.s.title
-            }
-          },
-          body: {
-            contents: d.s.body
-          },
-          size: {
-            col: d.s.col
-          }
-        },
-        large: {
-          head: {
-            title: {
-              contents: d.l.title
-            }
-          },
-          body: {
-            contents: d.l.body
-          },
-          size: {
-            col: d.l.col
-          }
-        },
-        updated_at: this.updatedAtByData(d)
-      };
+      var id = this._card_id_counter--;
+      return new models.CardSL().make(id, d);
     }
   }, {
     key: "makeCardsSL",
@@ -224,36 +183,10 @@ var Core = /*#__PURE__*/function () {
     /***** **************************************************************** *****/
 
   }, {
-    key: "makeMessageContents",
-    value: function makeMessageContents(v) {
-      if (Array.isArray(v)) return v.map(function (d, i) {
-        return /*#__PURE__*/_react["default"].createElement("p", {
-          key: i
-        }, d);
-      });
-      if ('string' === typeof v) return this.makeMessageContents(v.split('\n'));
-      return v;
-    }
-  }, {
     key: "makeMessage",
     value: function makeMessage(g) {
-      return {
-        id: this._card_id_counter--,
-        _class: 'MESSAGE',
-        _type: 'message',
-        _core: g,
-        size: {
-          col: 2,
-          row: 2
-        },
-        message: {
-          type: g.type === 'e' ? 'ERROR' : 'NORMAL',
-          title: g.title,
-          contents: this.makeMessageContents(g.msg),
-          core: g
-        },
-        updated_at: null
-      };
+      var id = this._card_id_counter--;
+      return new models.CardMessage().make(id, g);
     }
   }, {
     key: "makeMessages",
@@ -283,14 +216,26 @@ var Core = /*#__PURE__*/function () {
 
   }, {
     key: "getUpdatedAt",
-    value: function getUpdatedAt(seed, today) {
-      var data_next = seed.updated_at;
-      if (!data_next) return null;
-      var duedate = (0, _moment["default"])(data_next);
+    value: function getUpdatedAt(d, today) {
+      var date = d.core.nextActionDate(); // Next Action Date が設定されてない場合は now とする。
+
+      if (!date) return null;
+      var duedate = (0, _moment["default"])(date); // Next Action Date の値が日付でない場合は now とする。
+
       if (!duedate.isValid()) return (0, _moment["default"])();
-      if (duedate.isAfter(today)) return (0, _moment["default"])();
-      return null;
-    }
+      return duedate;
+    } // getUpdatedAt (d, today) {
+    //     const data_next = d.issue.date_next_action;
+    //     if (!data_next)
+    //         return moment();
+    //     const duedate = moment(data_next);
+    //     if (!duedate.isValid())
+    //         return moment();
+    //     if (duedate.isAfter(today))
+    //         return moment();
+    //     return null;
+    // }
+
   }, {
     key: "makeIssueCard",
     value: function makeIssueCard(d, today) {
@@ -335,18 +280,15 @@ var Core = /*#__PURE__*/function () {
     }
   }, {
     key: "updateIssueCard",
-    value: function updateIssueCard(card, seed, today) {
-      var x = function x(_x) {
-        return !_x ? _x : _x.format('YYYY-MM-DD');
-      };
+    value: function updateIssueCard(card, d, today) {
+      var card_next = card._core.issue.core.nextActionDate();
 
-      var card_next = x(card.updated_at);
-      var data_next = x(seed.updated_at);
-      if (card_next !== data_next) card.updated_at = this.getUpdatedAt(seed, today); // TODO: どれが正解?
+      var data_next = d.issue.core.nextActionDate();
+      if (card_next !== data_next) card.updated_at = this.getUpdatedAt(d, today); // TODO: どれが正解?
 
-      card.core = seed;
-      card.issue = seed;
-      card._core = seed;
+      card.core = d;
+      card.issue = d;
+      card._core = d;
     }
   }, {
     key: "list2ht",
@@ -355,8 +297,7 @@ var Core = /*#__PURE__*/function () {
         ht[d.id] = d;
         return ht;
       }, {});
-    } // TODO: delete
-
+    }
   }, {
     key: "setIssueCards",
     value: function setIssueCards(issues) {
@@ -434,16 +375,8 @@ var Core = /*#__PURE__*/function () {
   }, {
     key: "makePlane",
     value: function makePlane(d) {
-      return {
-        id: this._card_id_counter--,
-        _class: 'PLANE',
-        _type: d.type || 'other',
-        _core: d,
-        size: {
-          col: d.col || 3
-        },
-        updated_at: null
-      };
+      var id = this._card_id_counter--;
+      return new models.CardPlane().make(id, d);
     }
     /***** **************************************************************** *****/
 
@@ -486,10 +419,13 @@ var Core = /*#__PURE__*/function () {
       }
 
       var sorter = function sorter(a, b) {
+        if (a.updated_at.isSame(b.updated_at)) return a.id < b.id ? -1 : 1;
         return a.updated_at.isSameOrBefore(b.updated_at) ? -1 : 1;
       };
 
-      return [].concat(not_updated).concat(updated.sort(sorter));
+      return [].concat(not_updated.sort(function (a, b) {
+        return a.id < b.id ? -1 : 1;
+      })).concat(updated.sort(sorter));
     }
     /***** **************************************************************** *****/
 
