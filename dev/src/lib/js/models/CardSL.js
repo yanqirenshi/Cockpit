@@ -21,7 +21,8 @@ export default class CardSL extends Card {
                 title: null, // string
                 body: null, // string
                 col: 5
-            }
+            },
+            updated_at: null,
         };
     }
     make (id, data)  {
@@ -45,7 +46,7 @@ export default class CardSL extends Card {
                 body: { contents : data.l.body },
                 size: { col: data.l.col },
             },
-            updated_at: this.updatedAtByData(data),
+            updated_at: data.updated_at,
         };
 
     }

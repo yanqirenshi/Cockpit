@@ -68,7 +68,8 @@ var CardSL = /*#__PURE__*/function (_Card) {
           body: null,
           // string
           col: 5
-        }
+        },
+        updated_at: null
       };
     }
   }, {
@@ -106,7 +107,7 @@ var CardSL = /*#__PURE__*/function (_Card) {
             col: data.l.col
           }
         },
-        updated_at: this.updatedAtByData(data)
+        updated_at: data.updated_at
       };
     }
   }]);
