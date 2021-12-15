@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
+var _react = _interopRequireDefault(require("react"));
+
 var _Card2 = _interopRequireDefault(require("./Card.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -59,7 +61,7 @@ var CardMessage = /*#__PURE__*/function (_Card) {
     key: "makeMessageContents",
     value: function makeMessageContents(v) {
       if (Array.isArray(v)) return v.map(function (d, i) {
-        return /*#__PURE__*/React.createElement("p", {
+        return /*#__PURE__*/_react["default"].createElement("p", {
           key: i
         }, d);
       });
