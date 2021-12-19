@@ -83,11 +83,14 @@ function App() {
         },
     };
 
+    const background = <div style={{background:'#eee', height: '100%'}}></div>;
+
     return (
-        <div>
+        <div style={{height:'100%'}}>
           <Cockpit core={core}
                    loading={false}
                    filter={filter}
+                   background={background}
                    callbacks={callbacks}>
             {makeCards(cards, callbacks)}
           </Cockpit>

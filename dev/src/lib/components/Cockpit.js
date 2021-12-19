@@ -12,10 +12,21 @@ const style = {
     updatedat: {display:'none'},
     pool: {
         flexGrow:1,
-        overflow: 'auto',
-        paddingTop:22,
-        paddingBottom:222
+        height: 'calc(100% - 45px)',
+        background: {
+            height: '100%',
+            position: 'fixed',
+            top: 45,
+            left: 0,
+            width: '100%',
+        },
+        cards: {
+            overflow: 'auto',
+            paddingTop:22,
+            paddingBottom:222,
+        },
     }
+
 };
 
 function merge (props, key, style) {
@@ -45,10 +56,17 @@ export default function Cockpit (props) {
                         callbacks={callbacks}/>
           </div>
 
-          <div style={merge(props, "pool", style.pool)}>
-            <Cards core={core}>
-              {props.children}
-            </Cards>
+          <div style={style.pool}>
+            {props.background &&
+             <div style={style.pool.background}>
+               {props.background}
+             </div>}
+
+            <div style={style.pool.cards}>
+              <Cards core={core}>
+                {props.children}
+              </Cards>
+            </div>
           </div>
         </div>
     );
