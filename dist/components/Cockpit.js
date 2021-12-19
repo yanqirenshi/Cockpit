@@ -30,9 +30,19 @@ var style = {
   },
   pool: {
     flexGrow: 1,
-    overflow: 'auto',
-    paddingTop: 22,
-    paddingBottom: 222
+    height: 'calc(100% - 45px)',
+    background: {
+      height: '100%',
+      position: 'fixed',
+      top: 45,
+      left: 0,
+      width: '100%'
+    },
+    cards: {
+      overflow: 'auto',
+      paddingTop: 22,
+      paddingBottom: 222
+    }
   }
 };
 
@@ -56,8 +66,12 @@ function Cockpit(props) {
     filter: filter,
     callbacks: callbacks
   })), /*#__PURE__*/_react["default"].createElement("div", {
-    style: merge(props, "pool", style.pool)
+    style: style.pool
+  }, props.background && /*#__PURE__*/_react["default"].createElement("div", {
+    style: style.pool.background
+  }, props.background), /*#__PURE__*/_react["default"].createElement("div", {
+    style: style.pool.cards
   }, /*#__PURE__*/_react["default"].createElement(_Cards["default"], {
     core: core
-  }, props.children)));
+  }, props.children))));
 }
