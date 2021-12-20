@@ -1,5 +1,7 @@
-src
+dev
+documents
 examples
+src
 .babelrc
 .gitignore
 webpack.config.js
