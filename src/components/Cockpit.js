@@ -4,27 +4,34 @@ import Cards from './Cards.js';
 import Controller from './Controller.js';
 
 const style = {
-    root: {
-        display:'flex',
-        flexDirection: 'column',
-        height: '100%',
-    },
-    updatedat: {display:'none'},
+    width: '100%',
+    height: '100%',
     pool: {
-        flexGrow:1,
         height: 'calc(100% - 45px)',
+        width: '100%',
+        position: 'relative',
         background: {
-            height: 'calc(100% - 45px)',
             width: '100%',
-            position: 'fixed',
+            height: '100%',
+            position: 'absolute',
         },
-        cards: {
+        veil: {
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            background: 'rgba(255,255,255,0.7)',
+        },
+        forground: {
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            padding: 22,
+            paddingLeft: 77,
+            paddingRight: 77,
+            paddingBottom: 222,
             overflow: 'auto',
-            paddingTop:22,
-            paddingBottom:222,
         },
     }
-
 };
 
 function merge (props, key, style) {
@@ -47,7 +54,7 @@ export default function Cockpit (props) {
     const callbacks = props.callbacks;
 
     return (
-        <div style={style.root}>
+        <div style={style}>
           <div>
             <Controller loading={loading}
                         filter={filter}
@@ -60,7 +67,10 @@ export default function Cockpit (props) {
                {props.background}
              </div>}
 
-            <div style={style.pool.cards}>
+            <div style={style.pool.veil}>
+            </div>
+
+            <div style={style.pool.forground}>
               <Cards core={core}>
                 {props.children}
               </Cards>

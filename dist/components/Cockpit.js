@@ -20,26 +20,32 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var style = {
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%'
-  },
-  updatedat: {
-    display: 'none'
-  },
+  width: '100%',
+  height: '100%',
   pool: {
-    flexGrow: 1,
     height: 'calc(100% - 45px)',
+    width: '100%',
+    position: 'relative',
     background: {
-      height: 'calc(100% - 45px)',
       width: '100%',
-      position: 'fixed'
+      height: '100%',
+      position: 'absolute'
     },
-    cards: {
-      overflow: 'auto',
-      paddingTop: 22,
-      paddingBottom: 222
+    veil: {
+      width: '100%',
+      height: '100%',
+      position: 'absolute',
+      background: 'rgba(255,255,255,0.7)'
+    },
+    forground: {
+      width: '100%',
+      height: '100%',
+      position: 'absolute',
+      padding: 22,
+      paddingLeft: 77,
+      paddingRight: 77,
+      paddingBottom: 222,
+      overflow: 'auto'
     }
   }
 };
@@ -58,7 +64,7 @@ function Cockpit(props) {
   var filter = props.filter;
   var callbacks = props.callbacks;
   return /*#__PURE__*/_react["default"].createElement("div", {
-    style: style.root
+    style: style
   }, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement(_Controller["default"], {
     loading: loading,
     filter: filter,
@@ -68,7 +74,9 @@ function Cockpit(props) {
   }, props.background && /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool.background
   }, props.background), /*#__PURE__*/_react["default"].createElement("div", {
-    style: style.pool.cards
+    style: style.pool.veil
+  }), /*#__PURE__*/_react["default"].createElement("div", {
+    style: style.pool.forground
   }, /*#__PURE__*/_react["default"].createElement(_Cards["default"], {
     core: core
   }, props.children))));
