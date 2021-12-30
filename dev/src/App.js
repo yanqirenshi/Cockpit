@@ -93,6 +93,7 @@ function App() {
           <Cockpit core={core}
                    loading={false}
                    filter={filter}
+                   veil_color="rgba(231, 231, 235, 0.9)"
                    background={background}
                    callbacks={callbacks}>
             {makeCards(cards, callbacks)}

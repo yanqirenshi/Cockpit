@@ -19,7 +19,7 @@ const style = {
             width: '100%',
             height: '100%',
             position: 'absolute',
-            background: 'rgba(255,255,255,0.8)',
+            background: 'rgba(238, 238, 238, 0.9)',
         },
         forground: {
             width: '100%',
@@ -62,6 +62,9 @@ export default function Cockpit (props) {
         style_veil.display = 'none';
         style_forground.display = 'none';
     }
+
+    if (props.veil_color)
+        style_veil.background = props.veil_color;
 
     return (
         <div style={style}>

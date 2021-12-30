@@ -35,7 +35,7 @@ var style = {
       width: '100%',
       height: '100%',
       position: 'absolute',
-      background: 'rgba(255,255,255,0.8)'
+      background: 'rgba(238, 238, 238, 0.9)'
     },
     forground: {
       width: '100%',
@@ -74,6 +74,7 @@ function Cockpit(props) {
     style_forground.display = 'none';
   }
 
+  if (props.veil_color) style_veil.background = props.veil_color;
   return /*#__PURE__*/_react["default"].createElement("div", {
     style: style
   }, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement(_Controller["default"], {
