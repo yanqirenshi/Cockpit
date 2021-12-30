@@ -55,6 +55,14 @@ export default function Cockpit (props) {
 
     const children = props.children || [];
 
+    const style_veil = {...style.pool.veil};
+    const style_forground = {...style.pool.forground};
+
+    if (children.length===0) {
+        style_veil.display = 'none';
+        style_forground.display = 'none';
+    }
+
     return (
         <div style={style}>
           <div>
@@ -69,11 +77,9 @@ export default function Cockpit (props) {
                {props.background}
              </div>}
 
-            {children.length!==0 &&
-             <div style={style.pool.veil}>
-             </div>}
+            <div style={style_veil}></div>
 
-            <div style={style.pool.forground}>
+            <div style={style_forground}>
               <Cards core={core}>
                 {children}
               </Cards>

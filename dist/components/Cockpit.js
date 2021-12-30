@@ -64,6 +64,16 @@ function Cockpit(props) {
   var filter = props.filter;
   var callbacks = props.callbacks;
   var children = props.children || [];
+
+  var style_veil = _objectSpread({}, style.pool.veil);
+
+  var style_forground = _objectSpread({}, style.pool.forground);
+
+  if (children.length === 0) {
+    style_veil.display = 'none';
+    style_forground.display = 'none';
+  }
+
   return /*#__PURE__*/_react["default"].createElement("div", {
     style: style
   }, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement(_Controller["default"], {
@@ -74,10 +84,10 @@ function Cockpit(props) {
     style: style.pool
   }, props.background && /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool.background
-  }, props.background), children.length !== 0 && /*#__PURE__*/_react["default"].createElement("div", {
-    style: style.pool.veil
+  }, props.background), /*#__PURE__*/_react["default"].createElement("div", {
+    style: style_veil
   }), /*#__PURE__*/_react["default"].createElement("div", {
-    style: style.pool.forground
+    style: style_forground
   }, /*#__PURE__*/_react["default"].createElement(_Cards["default"], {
     core: core
   }, children))));
