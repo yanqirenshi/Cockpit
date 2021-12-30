@@ -32,11 +32,9 @@ var style = {
     flexGrow: 1,
     height: 'calc(100% - 45px)',
     background: {
-      height: '100%',
-      position: 'fixed',
-      top: 45,
-      left: 0,
-      width: '100%'
+      height: 'calc(100% - 45px)',
+      width: '100%',
+      position: 'fixed'
     },
     cards: {
       overflow: 'auto',
