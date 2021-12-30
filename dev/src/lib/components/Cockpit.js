@@ -19,7 +19,7 @@ const style = {
             width: '100%',
             height: '100%',
             position: 'absolute',
-            background: 'rgba(255,255,255,0.7)',
+            background: 'rgba(255,255,255,0.8)',
         },
         forground: {
             width: '100%',
@@ -53,6 +53,8 @@ export default function Cockpit (props) {
     const filter = props.filter;
     const callbacks = props.callbacks;
 
+    const children = props.children || [];
+
     return (
         <div style={style}>
           <div>
@@ -67,12 +69,13 @@ export default function Cockpit (props) {
                {props.background}
              </div>}
 
-            <div style={style.pool.veil}>
-            </div>
+            {children.length!==0 &&
+             <div style={style.pool.veil}>
+             </div>}
 
             <div style={style.pool.forground}>
               <Cards core={core}>
-                {props.children}
+                {children}
               </Cards>
             </div>
           </div>

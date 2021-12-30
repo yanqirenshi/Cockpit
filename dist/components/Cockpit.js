@@ -35,7 +35,7 @@ var style = {
       width: '100%',
       height: '100%',
       position: 'absolute',
-      background: 'rgba(255,255,255,0.7)'
+      background: 'rgba(255,255,255,0.8)'
     },
     forground: {
       width: '100%',
@@ -63,6 +63,7 @@ function Cockpit(props) {
   var loading = props.loading;
   var filter = props.filter;
   var callbacks = props.callbacks;
+  var children = props.children || [];
   return /*#__PURE__*/_react["default"].createElement("div", {
     style: style
   }, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement(_Controller["default"], {
@@ -73,11 +74,11 @@ function Cockpit(props) {
     style: style.pool
   }, props.background && /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool.background
-  }, props.background), /*#__PURE__*/_react["default"].createElement("div", {
+  }, props.background), children.length !== 0 && /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool.veil
   }), /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool.forground
   }, /*#__PURE__*/_react["default"].createElement(_Cards["default"], {
     core: core
-  }, props.children))));
+  }, children))));
 }
