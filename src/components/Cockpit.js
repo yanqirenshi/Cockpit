@@ -52,6 +52,7 @@ export default function Cockpit (props) {
     const loading = props.loading;
     const filter = props.filter;
     const callbacks = props.callbacks;
+    const additional = props.additional;
 
     const children = props.children || [];
 
@@ -71,7 +72,8 @@ export default function Cockpit (props) {
           <div>
             <Controller loading={loading}
                         filter={filter}
-                        callbacks={callbacks}/>
+                        callbacks={callbacks}
+                        additional={additional}/>
           </div>
 
           <div style={style.pool}>

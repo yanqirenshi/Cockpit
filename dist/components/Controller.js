@@ -40,6 +40,7 @@ function Controller(props) {
   var loading = props.loading;
   var filter = props.filter;
   var callbacks = props.callbacks;
+  var additional = props.additional;
   var callbacks_filter = callbacks.filter;
 
   var change = function change(e) {
@@ -102,5 +103,5 @@ function Controller(props) {
   }, "Clear All"), /*#__PURE__*/_react["default"].createElement("button", {
     className: "button is-small",
     onClick: checkAll
-  }, "Check All"))));
+  }, "Check All")), additional));
 }

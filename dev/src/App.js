@@ -95,7 +95,8 @@ function App() {
                    filter={filter}
                    veil_color="rgba(231, 231, 235, 0.9)"
                    background={background}
-                   callbacks={callbacks}>
+                   callbacks={callbacks}
+                   additional={<div><p>YYY</p></div>}>
             {makeCards(cards, callbacks)}
           </Cockpit>
         </div>

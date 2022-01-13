@@ -30,6 +30,7 @@ export default function Controller (props) {
     const loading = props.loading;
     const filter = props.filter;
     const callbacks = props.callbacks;
+    const additional = props.additional;
 
     const callbacks_filter = callbacks.filter;
 
@@ -80,6 +81,8 @@ export default function Controller (props) {
                 Check All
               </button>
             </div>
+
+            {additional}
           </div>
         </div>
     );

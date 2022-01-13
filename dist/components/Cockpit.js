@@ -63,6 +63,7 @@ function Cockpit(props) {
   var loading = props.loading;
   var filter = props.filter;
   var callbacks = props.callbacks;
+  var additional = props.additional;
   var children = props.children || [];
 
   var style_veil = _objectSpread({}, style.pool.veil);
@@ -80,7 +81,8 @@ function Cockpit(props) {
   }, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement(_Controller["default"], {
     loading: loading,
     filter: filter,
-    callbacks: callbacks
+    callbacks: callbacks,
+    additional: additional
   })), /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool
   }, props.background && /*#__PURE__*/_react["default"].createElement("div", {
