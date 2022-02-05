@@ -25,7 +25,7 @@ var style = {
     padding: 8
   },
   item: {
-    marginRight: 11,
+    marginLeft: 11,
     box: {
       marginRight: 3
     }

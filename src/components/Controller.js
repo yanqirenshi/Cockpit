@@ -14,7 +14,7 @@ const style = {
         padding: 8,
     },
     item: {
-        marginRight: 11,
+        marginLeft: 11,
         box: {
             marginRight:3,
         },
@@ -25,7 +25,7 @@ const style = {
         marginRight: 11,
         marginLeft: 7,
         color: '#888'
-    }
+    },
 };
 
 export default function Controller (props) {
