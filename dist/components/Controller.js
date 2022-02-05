@@ -11,8 +11,11 @@ var _reactFontawesome = require("@fortawesome/react-fontawesome");
 
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
 
+var _freeRegularSvgIcons = require("@fortawesome/free-regular-svg-icons");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+// import { faFilter, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 var style = {
   container: {
     borderBottom: '1px solid #eee',
@@ -22,15 +25,15 @@ var style = {
     padding: 8
   },
   item: {
-    marginRight: 22,
+    marginRight: 11,
     box: {
-      marginRight: 6
+      marginRight: 3
     }
   },
   icon: {
     fontSize: 14,
     marginTop: -2,
-    marginRight: 22,
+    marginRight: 11,
     marginLeft: 7,
     color: '#888'
   }
@@ -76,12 +79,7 @@ function Controller(props) {
   }, /*#__PURE__*/_react["default"].createElement(_reactFontawesome.FontAwesomeIcon, {
     style: {},
     icon: _freeSolidSvgIcons.faSyncAlt
-  }))), /*#__PURE__*/_react["default"].createElement("div", {
-    style: style.icon
-  }, /*#__PURE__*/_react["default"].createElement(_reactFontawesome.FontAwesomeIcon, {
-    style: {},
-    icon: _freeSolidSvgIcons.faFilter
-  })), filter.filter(function (d) {
+  }))), filter.filter(function (d) {
     return d.code;
   }).map(function (d, i) {
     return /*#__PURE__*/_react["default"].createElement("label", {
@@ -99,9 +97,19 @@ function Controller(props) {
     style: style.icon
   }, /*#__PURE__*/_react["default"].createElement("button", {
     className: "button is-small",
-    onClick: clearAll
-  }, "Clear All"), /*#__PURE__*/_react["default"].createElement("button", {
-    className: "button is-small",
     onClick: checkAll
-  }, "Check All")), additional));
+  }, "All", /*#__PURE__*/_react["default"].createElement(_reactFontawesome.FontAwesomeIcon, {
+    style: {
+      marginLeft: 3
+    },
+    icon: _freeRegularSvgIcons.faCheckSquare
+  })), /*#__PURE__*/_react["default"].createElement("button", {
+    className: "button is-small",
+    onClick: clearAll
+  }, "All", /*#__PURE__*/_react["default"].createElement(_reactFontawesome.FontAwesomeIcon, {
+    style: {
+      marginLeft: 3
+    },
+    icon: _freeRegularSvgIcons.faSquare
+  }))), additional));
 }

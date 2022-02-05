@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
+// import { faFilter, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
+import { faCheckSquare, faSquare } from "@fortawesome/free-regular-svg-icons";
 
 const style = {
     container: {
@@ -12,15 +14,15 @@ const style = {
         padding: 8,
     },
     item: {
-        marginRight: 22,
+        marginRight: 11,
         box: {
-            marginRight:6,
+            marginRight:3,
         },
     },
     icon: {
         fontSize: 14,
         marginTop: -2,
-        marginRight: 22,
+        marginRight: 11,
         marginLeft: 7,
         color: '#888'
     }
@@ -56,9 +58,9 @@ export default function Controller (props) {
               </button>
             </div>
 
-            <div style={style.icon}>
-              <FontAwesomeIcon style={{}} icon={faFilter} />
-            </div>
+            {/* <div style={style.icon}> */}
+            {/*   <FontAwesomeIcon style={{}} icon={faFilter} /> */}
+            {/* </div> */}
 
             {filter.filter(d=>d.code).map((d,i) => {
                 return (
@@ -74,11 +76,13 @@ export default function Controller (props) {
             })}
 
             <div style={style.icon}>
-              <button className="button is-small" onClick={clearAll}>
-                Clear All
-              </button>
               <button className="button is-small" onClick={checkAll}>
-                Check All
+                All
+                <FontAwesomeIcon style={{marginLeft:3}} icon={faCheckSquare} />
+              </button>
+              <button className="button is-small" onClick={clearAll}>
+                All
+                <FontAwesomeIcon style={{marginLeft:3}} icon={faSquare} />
               </button>
             </div>
 
