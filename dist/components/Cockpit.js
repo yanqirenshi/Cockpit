@@ -50,19 +50,13 @@ var style = {
   }
 };
 
-function merge(props, key, style) {
-  var props_style = props.style;
-  if (!props_style) return null;
-  var target = props_style[key];
-  if (!target) return null;
-  return _objectSpread(_objectSpread({}, style), target);
-}
-
 function Cockpit(props) {
   var core = props.core;
   var loading = props.loading;
   var filter = props.filter;
   var callbacks = props.callbacks;
+  var veil_color = props.veil_color;
+  var background = props.background;
   var additional = props.additional;
   var children = props.children || [];
 
@@ -75,7 +69,7 @@ function Cockpit(props) {
     style_forground.display = 'none';
   }
 
-  if (props.veil_color) style_veil.background = props.veil_color;
+  if (veil_color) style_veil.background = veil_color;
   return /*#__PURE__*/_react["default"].createElement("div", {
     style: style
   }, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement(_Controller["default"], {
@@ -85,9 +79,9 @@ function Cockpit(props) {
     additional: additional
   })), /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool
-  }, props.background && /*#__PURE__*/_react["default"].createElement("div", {
+  }, background && /*#__PURE__*/_react["default"].createElement("div", {
     style: style.pool.background
-  }, props.background), /*#__PURE__*/_react["default"].createElement("div", {
+  }, background), /*#__PURE__*/_react["default"].createElement("div", {
     style: style_veil
   }), /*#__PURE__*/_react["default"].createElement("div", {
     style: style_forground

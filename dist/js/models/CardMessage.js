@@ -41,12 +41,15 @@ var CardMessage = /*#__PURE__*/function (_Card) {
   function CardMessage() {
     _classCallCheck(this, CardMessage);
 
-    return _super.call(this);
+    return _super.apply(this, arguments);
   }
 
   _createClass(CardMessage, [{
     key: "seed",
-    value: function seed() {
+    value: // constructor () {
+    //     super();
+    // }
+    function seed() {
       return {
         id: -1,
         card: 'MESSAGE',

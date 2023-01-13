@@ -1,10 +1,9 @@
 import Card from './Card.js';
 
 export default class CardPlane extends Card {
-    constructor () {
-        super();
-
-    }
+    // constructor () {
+    //     super();
+    // }
     seed () {
         return {
             id: -1,

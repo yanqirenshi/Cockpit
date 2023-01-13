@@ -31,7 +31,7 @@ export default function SmallLarge (props) {
 
     const style_root = {
         width:  masonry_item.column_width * col + ((col-1) * masonry_item.gutter),
-        height: 'auto', // masonry_item.column_width * row,
+        height: 'auto',
         borderRadius: 8,
         marginBottom: 22,
     };

@@ -41,12 +41,15 @@ var CardLink = /*#__PURE__*/function (_Card) {
   function CardLink() {
     _classCallCheck(this, CardLink);
 
-    return _super.call(this);
+    return _super.apply(this, arguments);
   }
 
   _createClass(CardLink, [{
     key: "seed",
-    value: function seed() {
+    value: // constructor () {
+    //     super();
+    // }
+    function seed() {
       return {
         id: -1,
         card: 'LINK',

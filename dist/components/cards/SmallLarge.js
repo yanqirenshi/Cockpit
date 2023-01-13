@@ -44,7 +44,6 @@ function SmallLarge(props) {
   var style_root = {
     width: masonry_item.column_width * col + (col - 1) * masonry_item.gutter,
     height: 'auto',
-    // masonry_item.column_width * row,
     borderRadius: 8,
     marginBottom: 22
   };

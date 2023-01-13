@@ -1,4 +1,3 @@
-import React from 'react';
 import moment from 'moment';
 
 import * as models from './models/index.js';
@@ -117,8 +116,9 @@ export default class Core {
     /***** **************************************************************** *****/
     /*****   Issues and Projects                                            *****/
     /***** **************************************************************** *****/
-    getUpdatedAt (d, today) {
-        const date = d.core.nextActionDate();
+    getUpdatedAt (card_data, today) {
+        const issue = card_data._core.core;
+        const date = issue.nextActionDate();
 
         // Next Action Date が設定されてない場合は now とする。
         if (!date)
@@ -132,21 +132,6 @@ export default class Core {
 
         return duedate;
     }
-    // getUpdatedAt (d, today) {
-    //     const data_next = d.issue.date_next_action;
-    //     if (!data_next)
-    //         return moment();
-
-    //     const duedate = moment(data_next);
-
-    //     if (!duedate.isValid())
-    //         return moment();
-
-    //     if (duedate.isAfter(today))
-    //         return moment();
-
-    //     return null;
-    // }
     makeIssueCard (d, today) {
         console.warn('Not suppoted yet. method=makeIssueCard');
 
@@ -155,8 +140,6 @@ export default class Core {
             _type: '作業',
             _core: d,
             id: d.id,
-            issue: d, // 廃棄予定
-            core: d,  // 廃棄予定
             updated_at: this.getUpdatedAt(d, today),
             small: {
                 head: {
@@ -174,16 +157,17 @@ export default class Core {
             },
         };
     }
-    updateIssueCard (card, d, today)  {
-        const card_next = card._core.issue.core.nextActionDate();
-        const data_next = d.issue.core.nextActionDate();
-        if (card_next!==data_next)
-            card.updated_at = this.getUpdatedAt(d, today);
+    updateIssueCard (card, card_data, today)  {
+        const old_issue = card._core._core.core;
+        const now_issue = card_data._core.core;
 
-        // TODO: どれが正解?
-        card.core = d;
-        card.issue = d;
-        card._core = d;
+        const old_next = old_issue.nextActionDate();
+        const new_next = now_issue.nextActionDate();
+
+        if (old_next!==new_next)
+            card.updated_at = this.getUpdatedAt(card_data, today);
+
+        card._core = card_data;
     };
     list2ht (list) {
         return list.reduce((ht, d) => {
@@ -284,16 +268,15 @@ export default class Core {
     /***** **************************************************************** *****/
     /*****   Sort                                                           *****/
     /***** **************************************************************** *****/
-    sort (list) {
+    sort (cards) {
         const not_updated = [];
         const updated = [];
 
-        for (const d of list) {
-            if (d.updated_at)
-                updated.push(d);
+        for (const card of cards)
+            if (card.updated_at)
+                updated.push(card);
             else
-                not_updated.push(d);
-        }
+                not_updated.push(card);
 
         const sorter = (a,b) => {
             if (a.updated_at.isSame(b.updated_at))
@@ -323,37 +306,45 @@ export default class Core {
         }
     }
     data2cards (list, adapter) {
+        console.warn('data2cards は廃止予定です。cardDataList2Cards を利用してください。');
+        return this.cardDataList2Cards(list, adapter);
+    }
+    cardDataList2Cards (card_data_list, adapter) {
         const cards = this._cards2;
         const today = moment().startOf('date');
 
-        const ensurePool = (ht,key) => ht[key] || (ht[key] = {list:[], ht:{}, index_core: {}});
+        const ensurePool = (key, ht) =>
+              ht[key] || (ht[key] = {list:[], ht:{}, index_core: {}});
 
         const data_ht = {};
-        for (const data of list) {
-            data_ht[data.id] = data;
 
-            const card_type = data.card;
+        for (const card_data of card_data_list) {
+            const card_data_id = card_data.id;
+            const card_type = card_data.card;
 
+            data_ht[card_data_id] = card_data;
+
+            // card_type が空の場合、そのデータは無視する。
             if (!card_type) {
-                console.warn('[Bad Data] Card is empty. Skip a data. data=' + data);
+                console.warn('[Bad Data] Card is empty. Skip a data. data=' + card_data);
                 continue;
             }
 
-            const pool = ensurePool(cards, card_type);
+            // プールを取得する。
+            const pool = ensurePool(card_type, cards);
 
             // データのカードを取得する。
-            let card = pool.index_core[data.id];
-
+            let card = pool.index_core[card_data_id];
             if (card) {
                 // 存在している場合は更新
                 if (card._class==='SL' && card._type==="作業")
-                    this.updateIssueCard(card, data, today);
+                    this.updateIssueCard(card, card_data, today);
             } else {
                 // 存在していない場合は追加
-                card = this.data2card(data, today);
+                card = this.data2card(card_data, today);
 
                 if (!card) {
-                    console.warn('[Bad Data] Unsupported. Skip a data. data=' + data);
+                    console.warn('[Bad Data] Unsupported. Skip a data. data=' + card_data);
                     continue;
                 }
 
@@ -381,6 +372,7 @@ export default class Core {
             return l.concat(pool.list.filter(ommitCard));
         }, []);
 
+        // filter を作成する。
         this.filter(this.makeFilter(card_list));
 
         return card_list;
@@ -388,8 +380,8 @@ export default class Core {
     /***** **************************************************************** *****/
     /*****   Move last                                                      *****/
     /***** **************************************************************** *****/
-    moveLast (data) {
-        const card = this.getCard(data.id);
+    moveLast (card_id) {
+        const card = this.getCard(card_id);
 
         if (!card) return;
 
@@ -478,9 +470,14 @@ export default class Core {
     }
     calPoolWidth (dimensions) {
         const options = this._options;
-        const max_w = dimensions.width - options.column_width;
 
-        const col_w = options.column_width + (options.gutter * 2);
+        const column_width = options.column_width;
+        const screen_width = dimensions.width;
+        const gutter = options.gutter;
+
+        const max_w = screen_width - column_width;
+
+        const col_w = column_width + (gutter * 2);
 
         const max_col = Math.floor(max_w / col_w);
 

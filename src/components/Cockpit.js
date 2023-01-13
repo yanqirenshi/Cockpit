@@ -34,26 +34,15 @@ const style = {
     }
 };
 
-function merge (props, key, style) {
-    const props_style = props.style;
-    if (!props_style)
-        return null;
-
-    const target = props_style[key];
-    if (!target)
-        return null;
-
-    return {...style, ...target};
-}
-
 export default function Cockpit (props) {
     const core = props.core;
 
     const loading = props.loading;
     const filter = props.filter;
     const callbacks = props.callbacks;
+    const veil_color = props.veil_color;
+    const background = props.background;
     const additional = props.additional;
-
     const children = props.children || [];
 
     const style_veil = {...style.pool.veil};
@@ -64,8 +53,8 @@ export default function Cockpit (props) {
         style_forground.display = 'none';
     }
 
-    if (props.veil_color)
-        style_veil.background = props.veil_color;
+    if (veil_color)
+        style_veil.background = veil_color;
 
     return (
         <div style={style}>
@@ -77,9 +66,9 @@ export default function Cockpit (props) {
           </div>
 
           <div style={style.pool}>
-            {props.background &&
+            {background &&
              <div style={style.pool.background}>
-               {props.background}
+               {background}
              </div>}
 
             <div style={style_veil}></div>

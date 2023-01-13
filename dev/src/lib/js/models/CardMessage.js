@@ -3,10 +3,9 @@ import React from 'react';
 import Card from './Card.js';
 
 export default class CardMessage extends Card {
-    constructor () {
-        super();
-
-    }
+    // constructor () {
+    //     super();
+    // }
     seed () {
         return {
             id: -1,

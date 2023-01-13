@@ -39,12 +39,15 @@ var CardPlane = /*#__PURE__*/function (_Card) {
   function CardPlane() {
     _classCallCheck(this, CardPlane);
 
-    return _super.call(this);
+    return _super.apply(this, arguments);
   }
 
   _createClass(CardPlane, [{
     key: "seed",
-    value: function seed() {
+    value: // constructor () {
+    //     super();
+    // }
+    function seed() {
       return {
         id: -1,
         card: 'PLANE',

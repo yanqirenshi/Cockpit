@@ -2,9 +2,9 @@ import Card from './Card.js';
 import moment from 'moment';
 
 export default class CardLink extends Card {
-    constructor () {
-        super();
-    }
+    // constructor () {
+    //     super();
+    // }
     seed () {
         return {
             id: -1,

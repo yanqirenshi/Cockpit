@@ -7,8 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _react = _interopRequireDefault(require("react"));
-
 var _moment = _interopRequireDefault(require("moment"));
 
 var models = _interopRequireWildcard(require("./models/index.js"));
@@ -216,26 +214,16 @@ var Core = /*#__PURE__*/function () {
 
   }, {
     key: "getUpdatedAt",
-    value: function getUpdatedAt(d, today) {
-      var date = d.core.nextActionDate(); // Next Action Date が設定されてない場合は now とする。
+    value: function getUpdatedAt(card_data, today) {
+      var issue = card_data._core.core;
+      var date = issue.nextActionDate(); // Next Action Date が設定されてない場合は now とする。
 
       if (!date) return null;
       var duedate = (0, _moment["default"])(date); // Next Action Date の値が日付でない場合は now とする。
 
       if (!duedate.isValid()) return (0, _moment["default"])();
       return duedate;
-    } // getUpdatedAt (d, today) {
-    //     const data_next = d.issue.date_next_action;
-    //     if (!data_next)
-    //         return moment();
-    //     const duedate = moment(data_next);
-    //     if (!duedate.isValid())
-    //         return moment();
-    //     if (duedate.isAfter(today))
-    //         return moment();
-    //     return null;
-    // }
-
+    }
   }, {
     key: "makeIssueCard",
     value: function makeIssueCard(d, today) {
@@ -245,10 +233,6 @@ var Core = /*#__PURE__*/function () {
         _type: '作業',
         _core: d,
         id: d.id,
-        issue: d,
-        // 廃棄予定
-        core: d,
-        // 廃棄予定
         updated_at: this.getUpdatedAt(d, today),
         small: {
           head: {
@@ -280,15 +264,13 @@ var Core = /*#__PURE__*/function () {
     }
   }, {
     key: "updateIssueCard",
-    value: function updateIssueCard(card, d, today) {
-      var card_next = card._core.issue.core.nextActionDate();
-
-      var data_next = d.issue.core.nextActionDate();
-      if (card_next !== data_next) card.updated_at = this.getUpdatedAt(d, today); // TODO: どれが正解?
-
-      card.core = d;
-      card.issue = d;
-      card._core = d;
+    value: function updateIssueCard(card, card_data, today) {
+      var old_issue = card._core._core.core;
+      var now_issue = card_data._core.core;
+      var old_next = old_issue.nextActionDate();
+      var new_next = now_issue.nextActionDate();
+      if (old_next !== new_next) card.updated_at = this.getUpdatedAt(card_data, today);
+      card._core = card_data;
     }
   }, {
     key: "list2ht",
@@ -400,17 +382,17 @@ var Core = /*#__PURE__*/function () {
 
   }, {
     key: "sort",
-    value: function sort(list) {
+    value: function sort(cards) {
       var not_updated = [];
       var updated = [];
 
-      var _iterator2 = _createForOfIteratorHelper(list),
+      var _iterator2 = _createForOfIteratorHelper(cards),
           _step2;
 
       try {
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var d = _step2.value;
-          if (d.updated_at) updated.push(d);else not_updated.push(d);
+          var card = _step2.value;
+          if (card.updated_at) updated.push(card);else not_updated.push(card);
         }
       } catch (err) {
         _iterator2.e(err);
@@ -461,10 +443,16 @@ var Core = /*#__PURE__*/function () {
   }, {
     key: "data2cards",
     value: function data2cards(list, adapter) {
+      console.warn('data2cards は廃止予定です。cardDataList2Cards を利用してください。');
+      return this.cardDataList2Cards(list, adapter);
+    }
+  }, {
+    key: "cardDataList2Cards",
+    value: function cardDataList2Cards(card_data_list, adapter) {
       var cards = this._cards2;
       var today = (0, _moment["default"])().startOf('date');
 
-      var ensurePool = function ensurePool(ht, key) {
+      var ensurePool = function ensurePool(key, ht) {
         return ht[key] || (ht[key] = {
           list: [],
           ht: {},
@@ -474,33 +462,35 @@ var Core = /*#__PURE__*/function () {
 
       var data_ht = {};
 
-      var _iterator3 = _createForOfIteratorHelper(list),
+      var _iterator3 = _createForOfIteratorHelper(card_data_list),
           _step3;
 
       try {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var data = _step3.value;
-          data_ht[data.id] = data;
-          var card_type = data.card;
+          var card_data = _step3.value;
+          var card_data_id = card_data.id;
+          var card_type = card_data.card;
+          data_ht[card_data_id] = card_data; // card_type が空の場合、そのデータは無視する。
 
           if (!card_type) {
-            console.warn('[Bad Data] Card is empty. Skip a data. data=' + data);
+            console.warn('[Bad Data] Card is empty. Skip a data. data=' + card_data);
             continue;
-          }
+          } // プールを取得する。
 
-          var pool = ensurePool(cards, card_type); // データのカードを取得する。
 
-          var card = pool.index_core[data.id];
+          var pool = ensurePool(card_type, cards); // データのカードを取得する。
+
+          var card = pool.index_core[card_data_id];
 
           if (card) {
             // 存在している場合は更新
-            if (card._class === 'SL' && card._type === "作業") this.updateIssueCard(card, data, today);
+            if (card._class === 'SL' && card._type === "作業") this.updateIssueCard(card, card_data, today);
           } else {
             // 存在していない場合は追加
-            card = this.data2card(data, today);
+            card = this.data2card(card_data, today);
 
             if (!card) {
-              console.warn('[Bad Data] Unsupported. Skip a data. data=' + data);
+              console.warn('[Bad Data] Unsupported. Skip a data. data=' + card_data);
               continue;
             }
 
@@ -527,7 +517,8 @@ var Core = /*#__PURE__*/function () {
         };
 
         return l.concat(pool.list.filter(ommitCard));
-      }, []);
+      }, []); // filter を作成する。
+
       this.filter(this.makeFilter(card_list));
       return card_list;
     }
@@ -539,8 +530,8 @@ var Core = /*#__PURE__*/function () {
 
   }, {
     key: "moveLast",
-    value: function moveLast(data) {
-      var card = this.getCard(data.id);
+    value: function moveLast(card_id) {
+      var card = this.getCard(card_id);
       if (!card) return;
       card.updated_at = (0, _moment["default"])();
     }
@@ -661,8 +652,11 @@ var Core = /*#__PURE__*/function () {
     key: "calPoolWidth",
     value: function calPoolWidth(dimensions) {
       var options = this._options;
-      var max_w = dimensions.width - options.column_width;
-      var col_w = options.column_width + options.gutter * 2;
+      var column_width = options.column_width;
+      var screen_width = dimensions.width;
+      var gutter = options.gutter;
+      var max_w = screen_width - column_width;
+      var col_w = column_width + gutter * 2;
       var max_col = Math.floor(max_w / col_w);
       return max_col * col_w;
     }
