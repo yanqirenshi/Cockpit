@@ -29,6 +29,8 @@ export default function SmallLarge (props) {
     const card_data = open ? data.large : data.small;
     const col = card_data.size.col || 1;
 
+    // masonry_item.column_width : 100
+    // masonry_item.gutter: 10
     const style_root = {
         width:  masonry_item.column_width * col + ((col-1) * masonry_item.gutter),
         height: 'auto',

@@ -21,7 +21,7 @@ export default function Message (props) {
     const col = data.size.col || 1;
 
     const style = {
-        width:  masonry_item.column_width * col,
+        width:  masonry_item.column_width * col + ((col-1) * masonry_item.gutter),
         height: 'auto', // masonry_item.column_width * row,
         borderRadius: 8,
         marginBottom: 22,

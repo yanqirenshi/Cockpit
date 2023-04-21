@@ -40,7 +40,9 @@ function SmallLarge(props) {
   var callbacks = props.source.callbacks.sl;
   var open = data.open;
   var card_data = open ? data.large : data.small;
-  var col = card_data.size.col || 1;
+  var col = card_data.size.col || 1; // masonry_item.column_width : 100
+  // masonry_item.gutter: 10
+
   var style_root = {
     width: masonry_item.column_width * col + (col - 1) * masonry_item.gutter,
     height: 'auto',

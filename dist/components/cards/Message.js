@@ -28,7 +28,7 @@ function Message(props) {
   var masonry_item = props.source.masonry_item;
   var col = data.size.col || 1;
   var style = {
-    width: masonry_item.column_width * col,
+    width: masonry_item.column_width * col + (col - 1) * masonry_item.gutter,
     height: 'auto',
     // masonry_item.column_width * row,
     borderRadius: 8,

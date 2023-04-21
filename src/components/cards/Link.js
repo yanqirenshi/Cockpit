@@ -60,7 +60,7 @@ export default function Link (props) {
     const row = data.size.row || 1;
 
     const style_root = {
-        width:  masonry_item.column_width * col,
+        width:  masonry_item.column_width * col + ((col-1) * masonry_item.gutter),
         height: masonry_item.column_width * row,
         borderRadius: 8,
         marginBottom: 22,
