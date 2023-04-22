@@ -88,9 +88,15 @@ function App() {
 
     const background = <div style={{background:'#eee', height: '100%'}}></div>;
 
+    const options = core.options();
+    const w_unit = options.column_width + (options.gutter * 2);
+    const cols = Math.floor(window.innerWidth / w_unit) - 2;
+    const w = cols * w_unit;
+
     return (
         <div style={{height:'100%'}}>
-          <Cockpit core={core}
+          <Cockpit style={{pool:{ forground: { contents: { width: w, margin:'auto', marginLeft:'auto'} }}}}
+                   core={core}
                    loading={false}
                    filter={filter}
                    veil_color="rgba(231, 231, 235, 0.9)"
