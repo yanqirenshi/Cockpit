@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Measure from 'react-measure';
-import Masonry from 'react-masonry-component';
+import Masonry from './MasonryLayout.js';
 
 export default function Cards (props) {
     const [dimensions, setDimensions] = useState({ width: -1, height: -1 });
